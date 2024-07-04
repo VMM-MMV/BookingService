@@ -19,6 +19,12 @@ public class BookingController {
         return ResponseEntity.ok(createdBooking);
     }
 
+    @PutMapping("/update/{id}")
+    public ResponseEntity<BookingDTO> updateBooking(@PathVariable Long id, @RequestBody Booking updatedBooking) {
+        BookingDTO updatedBookingDto = bookingService.updateBooking(id, updatedBooking);
+        return ResponseEntity.ok(updatedBookingDto);
+    }
+
     @GetMapping("/all")
     public ResponseEntity<List<BookingDTO>> getAllBookings() {
         List<BookingDTO> bookings = bookingService.getAllBookings();

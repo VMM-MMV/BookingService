@@ -2,12 +2,8 @@ package com.example.demo.bookings;
 
 import com.example.demo.locations.Location;
 import com.example.demo.locations.LocationRepository;
-import jakarta.persistence.LockModeType;
-import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.Lock;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
-import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +33,32 @@ public class BookingService {
 
         booking.setLocation(location);
         Booking savedBooking = bookingRepository.save(booking);
+
+        return BookingMapper.toDTO(savedBooking);
+    }
+
+    @Transactional
+    @Retryable(value = ObjectOptimisticLockingFailureException.class, maxAttempts = 3)
+    public BookingDTO updateBooking(Long bookingId, Booking updatedBooking) {
+        Booking existingBooking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new IllegalArgumentException("Booking not found"));
+
+        Location location = locationRepository.findById(updatedBooking.getLocation().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Location not found"));
+
+        location.setVersion(location.getVersion() + 1);
+
+        boolean bookingEndsBeforeItStarts = updatedBooking.getEndTime().isBefore(updatedBooking.getStartTime());
+        if (bookingEndsBeforeItStarts) throw new IllegalArgumentException("Booking can't end before it starts.");
+
+        boolean bookingIsOverlappedWithAnotherBooking = bookingRepository.existsOverlappingBookingForUpdate(bookingId, location.getId(), updatedBooking.getStartTime(), updatedBooking.getEndTime());
+        if (bookingIsOverlappedWithAnotherBooking) throw new IllegalArgumentException("Overlapping booking exists for the given location and time.");
+
+        existingBooking.setStartTime(updatedBooking.getStartTime());
+        existingBooking.setEndTime(updatedBooking.getEndTime());
+        existingBooking.setLocation(location);
+
+        Booking savedBooking = bookingRepository.save(existingBooking);
 
         return BookingMapper.toDTO(savedBooking);
     }

@@ -3,8 +3,6 @@ package com.example.demo.bookings;
 import com.example.demo.locations.Location;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.OptimisticLocking;
-import org.springframework.data.jpa.repository.Lock;
 
 import java.time.LocalDateTime;
 
