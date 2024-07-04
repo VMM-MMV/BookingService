@@ -43,6 +43,13 @@ public class BookingService {
         return bookingRepository.getAll();
     }
 
+    @Transactional(readOnly = true)
+    public BookingDTO getBookingById(Long id) {
+        Booking booking = bookingRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Booking not found"));
+        return BookingMapper.toDTO(booking);
+    }
+
     @Transactional
     public void deleteBookingById(Long bookingId) {
         bookingRepository.deleteById(bookingId);

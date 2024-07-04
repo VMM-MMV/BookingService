@@ -12,15 +12,16 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-@Transactional
-public interface BookingRepository extends JpaRepository<Booking, Long> {
 
+public interface BookingRepository extends JpaRepository<Booking, Long> {
+    @Transactional(readOnly = true)
     @Query("SELECT CASE WHEN COUNT(b) > 0 THEN true ELSE false END FROM Booking b " +
             "WHERE b.location.id = :locationId " +
             "AND :startTime < b.endTime")
     boolean existsOverlappingBooking(@Param("locationId") Long locationId,
                                      @Param("startTime") LocalDateTime startTime);
 
+    @Transactional(readOnly = true)
     @Query("SELECT new com.example.demo.bookings.BookingDTO(b.id, b.userId, b.location.id, b.startTime, b.endTime) FROM Booking b")
     List<BookingDTO> getAll();
 
