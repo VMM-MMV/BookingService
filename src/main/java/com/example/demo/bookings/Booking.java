@@ -4,6 +4,7 @@ import com.example.demo.locations.Location;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.OptimisticLocking;
+import org.springframework.data.jpa.repository.Lock;
 
 import java.time.LocalDateTime;
 
@@ -30,8 +31,4 @@ public class Booking {
 
     @Column(name = "end_time", nullable = false)
     private LocalDateTime endTime;
-
-    @Version
-    @Column(nullable = false)
-    private Long version;
 }

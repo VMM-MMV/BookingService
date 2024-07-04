@@ -19,4 +19,8 @@ public class Location {
 
     @Column(nullable = false)
     private String address;
+
+    @Version
+    @Column(nullable = false)
+    private Long version;
 }

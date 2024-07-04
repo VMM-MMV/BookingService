@@ -20,29 +20,13 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("SELECT CASE WHEN COUNT(b) > 0 THEN true ELSE false END " +
             "FROM Booking b " +
             "WHERE b.location.id = :locationId " +
-            "AND ((:startTime >= b.startTime AND :startTime < b.endTime) " +
-            "     OR (:endTime > b.startTime AND :endTime <= b.endTime))")
+            "AND (:startTime < b.endTime and :endTime > b.startTime)")
     boolean existsOverlappingBooking(@Param("locationId") Long locationId,
                                      @Param("startTime") LocalDateTime startTime,
                                      @Param("endTime") LocalDateTime endTime);
 
     @Transactional(readOnly = true)
-    @Query("SELECT CASE WHEN COUNT(b) > 0 THEN true ELSE false END " +
-            "FROM Booking b " +
-            "WHERE b.location.id = :locationId " +
-            "AND b.id != :id " +
-            "AND ((:startTime >= b.startTime AND :startTime < b.endTime) " +
-            "     OR (:endTime > b.startTime AND :endTime <= b.endTime))")
-    boolean existsOverlappingBookingAndNotSameEntry(@Param("locationId") Long locationId,
-                                     @Param("startTime") LocalDateTime startTime,
-                                     @Param("endTime") LocalDateTime endTime,
-                                     @Param("endTime") Long id);
-
-    @Transactional(readOnly = true)
     @Query("SELECT new com.example.demo.bookings.BookingDTO(b.id, b.userId, b.location.id, b.startTime, b.endTime) FROM Booking b")
     List<BookingDTO> getAll();
-
-    @Lock(LockModeType.OPTIMISTIC_FORCE_INCREMENT)
-    <S extends Booking> S save(S entity);
 }
 

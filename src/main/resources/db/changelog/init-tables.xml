@@ -17,6 +17,9 @@
             <column name="address" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
+            <column name="version" type="BIGINT" defaultValue="1">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
 
@@ -26,102 +29,122 @@
             <column name="id" value="1"/>
             <column name="name" value="Conference Room A"/>
             <column name="address" value="123 Main St, Anytown, USA"/>
+            <column name="version" value="1"/>
         </insert>
         <insert tableName="location">
             <column name="id" value="2"/>
             <column name="name" value="Conference Room B"/>
             <column name="address" value="456 Oak Ave, Somewhere City, USA"/>
+            <column name="version" value="1"/>
         </insert>
         <!-- Add more insert statements for additional locations -->
         <insert tableName="location">
             <column name="id" value="3"/>
             <column name="name" value="Board Room 1"/>
             <column name="address" value="789 Elm St, Another City, USA"/>
+            <column name="version" value="1"/>
         </insert>
         <insert tableName="location">
             <column name="id" value="4"/>
             <column name="name" value="Meeting Room Alpha"/>
             <column name="address" value="321 Pine Blvd, Metropolis, USA"/>
+            <column name="version" value="1"/>
         </insert>
         <insert tableName="location">
             <column name="id" value="5"/>
             <column name="name" value="Conference Center East"/>
             <column name="address" value="555 Maple Ave, Big Town, USA"/>
+            <column name="version" value="1"/>
         </insert>
         <insert tableName="location">
             <column name="id" value="6"/>
             <column name="name" value="Seminar Hall 3"/>
             <column name="address" value="444 Cedar St, Smallville, USA"/>
+            <column name="version" value="1"/>
         </insert>
         <insert tableName="location">
             <column name="id" value="7"/>
             <column name="name" value="Executive Suite 2"/>
             <column name="address" value="777 Oakwood Dr, Capital City, USA"/>
+            <column name="version" value="1"/>
         </insert>
         <insert tableName="location">
             <column name="id" value="8"/>
             <column name="name" value="Training Room Beta"/>
             <column name="address" value="888 Elm Ave, Hometown, USA"/>
+            <column name="version" value="1"/>
         </insert>
         <insert tableName="location">
             <column name="id" value="9"/>
             <column name="name" value="Workshop Area A"/>
             <column name="address" value="999 Walnut Ln, Village, USA"/>
+            <column name="version" value="1"/>
         </insert>
         <insert tableName="location">
             <column name="id" value="10"/>
             <column name="name" value="Conference Center West"/>
             <column name="address" value="1010 Oak Blvd, Metro City, USA"/>
+            <column name="version" value="1"/>
         </insert>
         <insert tableName="location">
             <column name="id" value="11"/>
             <column name="name" value="Lecture Hall C"/>
             <column name="address" value="111 Pine Dr, Suburbia, USA"/>
+            <column name="version" value="1"/>
         </insert>
         <insert tableName="location">
             <column name="id" value="12"/>
             <column name="name" value="Meeting Room Delta"/>
             <column name="address" value="1212 Maple Rd, Coastal Town, USA"/>
+            <column name="version" value="1"/>
         </insert>
         <insert tableName="location">
             <column name="id" value="13"/>
             <column name="name" value="Seminar Room Gamma"/>
             <column name="address" value="1313 Cedar Ave, Bay City, USA"/>
+            <column name="version" value="1"/>
         </insert>
         <insert tableName="location">
             <column name="id" value="14"/>
             <column name="name" value="Conference Hall Z"/>
             <column name="address" value="1414 Elm Blvd, Mountain View, USA"/>
+            <column name="version" value="1"/>
         </insert>
         <insert tableName="location">
             <column name="id" value="15"/>
             <column name="name" value="Board Room Omega"/>
             <column name="address" value="1515 Oakwood Ln, Lakeside, USA"/>
+            <column name="version" value="1"/>
         </insert>
         <insert tableName="location">
             <column name="id" value="16"/>
             <column name="name" value="Training Center Epsilon"/>
             <column name="address" value="1616 Elm Rd, Riverside, USA"/>
+            <column name="version" value="1"/>
         </insert>
         <insert tableName="location">
             <column name="id" value="17"/>
             <column name="name" value="Workshop Zone K"/>
             <column name="address" value="1717 Maple Dr, Parkville, USA"/>
+            <column name="version" value="1"/>
         </insert>
         <insert tableName="location">
             <column name="id" value="18"/>
             <column name="name" value="Meeting Space Theta"/>
             <column name="address" value="1818 Cedar Ave, Junction City, USA"/>
+            <column name="version" value="1"/>
         </insert>
         <insert tableName="location">
             <column name="id" value="19"/>
             <column name="name" value="Conference Suite Lambda"/>
             <column name="address" value="1919 Pine Blvd, Harmony Town, USA"/>
+            <column name="version" value="1"/>
         </insert>
         <insert tableName="location">
             <column name="id" value="20"/>
             <column name="name" value="Seminar Area Nu"/>
             <column name="address" value="2020 Elm St, Tranquil Village, USA"/>
+            <column name="version" value="1"/>
         </insert>
     </changeSet>
 
@@ -141,9 +164,6 @@
                 <constraints nullable="false"/>
             </column>
             <column name="end_time" type="TIMESTAMP">
-                <constraints nullable="false"/>
-            </column>
-            <column name="version" type="BIGINT" defaultValue="1">
                 <constraints nullable="false"/>
             </column>
         </createTable>

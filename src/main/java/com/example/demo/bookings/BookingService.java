@@ -5,6 +5,10 @@ import com.example.demo.locations.LocationRepository;
 import jakarta.persistence.LockModeType;
 import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.Lock;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,30 +21,24 @@ public class BookingService {
     private final BookingRepository bookingRepository;
     private final LocationRepository locationRepository;
 
-//    @Transactional
+    @Transactional
+    @Retryable(value = ObjectOptimisticLockingFailureException.class, maxAttempts = 3)
     public BookingDTO createBooking(Booking booking) {
         Location location = locationRepository.findById(booking.getLocation().getId())
                 .orElseThrow(() -> new IllegalArgumentException("Location not found"));
 
+        location.setVersion(location.getVersion()+1);
+
         boolean bookingEndsBeforeItStarts = booking.getEndTime().isBefore(booking.getStartTime());
         if (bookingEndsBeforeItStarts) throw new IllegalArgumentException("Booking can't end before it starts.");
 
-        if (bookingRepository.existsOverlappingBooking(location.getId(), booking.getStartTime(), booking.getEndTime())) {
-            throw new IllegalArgumentException("Overlapping booking exists for the given location and time.");
-        }
+        boolean bookingIsOverlappedWithAnotherBooking = bookingRepository.existsOverlappingBooking(location.getId(), booking.getStartTime(), booking.getEndTime());
+        if (bookingIsOverlappedWithAnotherBooking) throw new IllegalArgumentException("Overlapping booking exists for the given location and time.");
 
-        try {
-            booking.setLocation(location);
-            Booking savedBooking = bookingRepository.save(booking);
+        booking.setLocation(location);
+        Booking savedBooking = bookingRepository.save(booking);
 
-//            System.out.println(savedBooking.getId());
-            if (bookingRepository.existsOverlappingBookingAndNotSameEntry(location.getId(), booking.getStartTime(), booking.getEndTime(), savedBooking.getId())) {
-                throw new IllegalArgumentException("Overlapping booking exists for the given location and time.");
-            }
-            return BookingMapper.toDTO(savedBooking);
-        } catch (OptimisticLockException ex) {
-            throw new OptimisticLockException("Optimistic locking failure occurred", ex);
-        }
+        return BookingMapper.toDTO(savedBooking);
     }
 
     @Transactional(readOnly = true)
