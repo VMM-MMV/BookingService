@@ -17,7 +17,7 @@ public class BookingService {
     private final BookingRepository bookingRepository;
     private final LocationRepository locationRepository;
 
-    @Transactional
+//    @Transactional
     public BookingDTO createBooking(Booking booking) {
         Location location = locationRepository.findById(booking.getLocation().getId())
                 .orElseThrow(() -> new IllegalArgumentException("Location not found"));
@@ -25,13 +25,18 @@ public class BookingService {
         boolean bookingEndsBeforeItStarts = booking.getEndTime().isBefore(booking.getStartTime());
         if (bookingEndsBeforeItStarts) throw new IllegalArgumentException("Booking can't end before it starts.");
 
-        if (bookingRepository.existsOverlappingBooking(location.getId(), booking.getStartTime())) {
+        if (bookingRepository.existsOverlappingBooking(location.getId(), booking.getStartTime(), booking.getEndTime())) {
             throw new IllegalArgumentException("Overlapping booking exists for the given location and time.");
         }
 
         try {
             booking.setLocation(location);
             Booking savedBooking = bookingRepository.save(booking);
+
+//            System.out.println(savedBooking.getId());
+            if (bookingRepository.existsOverlappingBookingAndNotSameEntry(location.getId(), booking.getStartTime(), booking.getEndTime(), savedBooking.getId())) {
+                throw new IllegalArgumentException("Overlapping booking exists for the given location and time.");
+            }
             return BookingMapper.toDTO(savedBooking);
         } catch (OptimisticLockException ex) {
             throw new OptimisticLockException("Optimistic locking failure occurred", ex);
