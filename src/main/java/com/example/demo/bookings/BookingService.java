@@ -34,7 +34,7 @@ public class BookingService {
             Booking savedBooking = bookingRepository.save(booking);
             return BookingMapper.toDTO(savedBooking);
         } catch (OptimisticLockException ex) {
-            throw new IllegalStateException("Optimistic locking failure occurred", ex);
+            throw new OptimisticLockException("Optimistic locking failure occurred", ex);
         }
     }
 
@@ -52,24 +52,4 @@ public class BookingService {
     public void deleteAllBookings() {
         bookingRepository.deleteAll();
     }
-//    @Transactional
-//    public BookingDTO updateBooking(Long id, Booking updatedBooking) {
-//        Location location = locationRepository.findById(updatedBooking.getLocation().getId())
-//                .orElseThrow(() -> new IllegalArgumentException("Location not found"));
-//        return bookingRepository.findById(id)
-//                .map(existingBooking -> {
-//                    if (bookingRepository.existsOverlappingBooking(updatedBooking.getLocation().getId(),
-//                            updatedBooking.getStartTime(),
-//                            updatedBooking.getEndTime())) {
-//                        throw new IllegalArgumentException("Overlapping booking exists for the given location and time.");
-//                    }
-//                    existingBooking.setUserId(updatedBooking.getUserId());
-//                    existingBooking.setLocation(location);
-//                    existingBooking.setStartTime(updatedBooking.getStartTime());
-//                    existingBooking.setEndTime(updatedBooking.getEndTime());
-//                    Booking savedBooking = bookingRepository.save(existingBooking);
-//                    return BookingMapper.toDTO(savedBooking);
-//                })
-//                .orElseThrow(() -> new IllegalArgumentException("Booking not found"));
-//    }
 }

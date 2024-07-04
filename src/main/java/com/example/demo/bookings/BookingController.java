@@ -1,8 +1,6 @@
 package com.example.demo.bookings;
 
-import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,15 +14,9 @@ public class BookingController {
     private final BookingService bookingService;
 
     @PostMapping("/create")
-    public ResponseEntity<?> createBooking(@RequestBody Booking booking) {
-        try {
-            BookingDTO createdBooking = bookingService.createBooking(booking);
-            return ResponseEntity.ok(createdBooking);
-        } catch (OptimisticLockException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Optimistic locking conflict occurred");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating booking");
-        }
+    public ResponseEntity<BookingDTO> createBooking(@RequestBody Booking booking) {
+        BookingDTO createdBooking = bookingService.createBooking(booking);
+        return ResponseEntity.ok(createdBooking);
     }
 
     @GetMapping("/all")
@@ -35,12 +27,8 @@ public class BookingController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteBookingById(@PathVariable Long id) {
-        try {
-            bookingService.deleteBookingById(id);
-            return ResponseEntity.noContent().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
-        }
+        bookingService.deleteBookingById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/delete/all")
