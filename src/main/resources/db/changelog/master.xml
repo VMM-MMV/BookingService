@@ -3,4 +3,6 @@
 
     <include file="classpath:db/changelog/init-tables.xml" relativeToChangelogFile="false" />
 
+    <include file="classpath:db/changelog/add-constraint.xml" relativeToChangelogFile="false" />
+
 </databaseChangeLog>
