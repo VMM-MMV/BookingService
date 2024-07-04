@@ -1,4 +1,4 @@
-package com.example.demo.bookings;
+package com.example.demo.bookings.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookingDTO {
-
     private Long id;
     private Long userId;
     private Long locationId;

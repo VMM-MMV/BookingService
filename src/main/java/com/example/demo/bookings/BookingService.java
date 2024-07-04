@@ -1,5 +1,7 @@
 package com.example.demo.bookings;
 
+import com.example.demo.bookings.dto.BookingDTO;
+import com.example.demo.bookings.dto.BookingMapper;
 import com.example.demo.locations.Location;
 import com.example.demo.locations.LocationRepository;
 import lombok.RequiredArgsConstructor;

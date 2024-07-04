@@ -1,4 +1,6 @@
-package com.example.demo.bookings;
+package com.example.demo.bookings.dto;
+
+import com.example.demo.bookings.Booking;
 
 public class BookingMapper {
 

@@ -1,5 +1,7 @@
 package com.example.demo.locations;
 
+import com.example.demo.locations.dto.LocationDTO;
+import com.example.demo.locations.dto.LocationMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,30 +15,33 @@ public class LocationService {
     private final LocationRepository locationRepository;
 
     @Transactional(readOnly = true)
-    public List<Location> getAllLocations() {
-        return locationRepository.findAll();
+    public List<LocationDTO> getAllLocations() {
+        return locationRepository.getAll();
     }
 
     @Transactional(readOnly = true)
-    public Location getLocationById(Long id) {
-        return locationRepository.findById(id)
+    public LocationDTO getLocationById(Long id) {
+        Location location = locationRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Location not found"));
+        return LocationMapper.toDto(location);
     }
 
     @Transactional
-    public Location createLocation(Location location) {
-        return locationRepository.save(location);
+    public LocationDTO createLocation(LocationDTO locationDto) {
+        Location location = LocationMapper.toEntity(locationDto);
+        location = locationRepository.save(location);
+        return LocationMapper.toDto(location);
     }
 
     @Transactional
-    public Location updateLocation(Long id, Location updatedLocation) {
-        return locationRepository.findById(id)
-                .map(existingLocation -> {
-                    existingLocation.setName(updatedLocation.getName());
-                    existingLocation.setAddress(updatedLocation.getAddress());
-                    return locationRepository.save(existingLocation);
-                })
+    public LocationDTO updateLocation(Long id, LocationDTO updatedLocationDTO) {
+        Location existingLocation = locationRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Location not found"));
+
+        LocationMapper.updateEntityFromDto(updatedLocationDTO, existingLocation);
+        existingLocation = locationRepository.save(existingLocation);
+
+        return LocationMapper.toDto(existingLocation);
     }
 
     @Transactional
@@ -44,4 +49,3 @@ public class LocationService {
         locationRepository.deleteById(id);
     }
 }
-

@@ -1,5 +1,6 @@
 package com.example.demo.locations;
 
+import com.example.demo.locations.dto.LocationDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,27 +15,27 @@ public class LocationController {
     private final LocationService locationService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<Location>> getAllLocations() {
-        List<Location> locations = locationService.getAllLocations();
+    public ResponseEntity<List<LocationDTO>> getAllLocations() {
+        List<LocationDTO> locations = locationService.getAllLocations();
         return ResponseEntity.ok(locations);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Location> getLocationById(@PathVariable Long id) {
-        Location location = locationService.getLocationById(id);
+    public ResponseEntity<LocationDTO> getLocationById(@PathVariable Long id) {
+        LocationDTO location = locationService.getLocationById(id);
         return ResponseEntity.ok(location);
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Location> createLocation(@RequestBody Location location) {
-        Location createdLocation = locationService.createLocation(location);
+    public ResponseEntity<LocationDTO> createLocation(@RequestBody LocationDTO locationDto) {
+        LocationDTO createdLocation = locationService.createLocation(locationDto);
         return ResponseEntity.ok(createdLocation);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Location> updateLocation(@PathVariable Long id, @RequestBody Location updatedLocation) {
-        Location location = locationService.updateLocation(id, updatedLocation);
-        return ResponseEntity.ok(location);
+    public ResponseEntity<LocationDTO> updateLocation(@PathVariable Long id, @RequestBody LocationDTO updatedLocationDTO) {
+        LocationDTO updatedLocation = locationService.updateLocation(id, updatedLocationDTO);
+        return ResponseEntity.ok(updatedLocation);
     }
 
     @DeleteMapping("/delete/{id}")

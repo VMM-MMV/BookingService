@@ -1,5 +1,6 @@
 package com.example.demo.bookings;
 
+import com.example.demo.bookings.dto.BookingDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -32,7 +33,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
                                               @Param("endTime") LocalDateTime endTime);
 
     @Transactional(readOnly = true)
-    @Query("SELECT new com.example.demo.bookings.BookingDTO(b.id, b.userId, b.location.id, b.startTime, b.endTime) FROM Booking b")
+    @Query("SELECT new com.example.demo.bookings.dto.BookingDTO(b.id, b.userId, b.location.id, b.startTime, b.endTime) FROM Booking b")
     List<BookingDTO> getAll();
 }
 
